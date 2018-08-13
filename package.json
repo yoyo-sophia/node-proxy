@@ -1,0 +1,19 @@
+{
+  "name": "server-master",
+  "version": "1.0.0",
+  "description": "### 1.将当前两个文件复制到需要代理的页面目录",
+  "main": "proxy-conf.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "connect-timeout": "^1.9.0",
+    "express": "^4.16.3",
+    "http-proxy": "^1.17.0",
+    "http-proxy-middleware": "^0.18.0",
+    "url": "^0.11.0"
+  }
+}

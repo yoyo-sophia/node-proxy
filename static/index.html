@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+12
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $(function(){
+        $.ajax({
+            url:'/api/v1/account/operatorList',
+            data:{
+                offset:0,
+                limit:25
+            },
+            success:function(res){
+                console.log(res)
+            },
+            error:function (err) {
+                console.log(err)
+            }
+        })
+        $.ajax({
+            type:'post',
+            url:'/qq/playlist/detail?id=19723756',
+            success:function (res) {
+                console.log('success');
+                console.log(res)
+            },
+            error:function (err) {
+                console.log('error');
+                console.log(err)
+            }
+        })
+        $.ajax({
+            url:'/api/v1/orders/get_user_package',
+            dataType: 'json',
+            success:function (res) {
+                console.log('success2')
+                console.log(res);
+            },
+            error:function (err) {
+                console.log('err2');
+                console.log(err)
+            }
+        })
+        $.ajax({
+            url:'/api/v1/orders/get_card_order_back',
+            dataType:'json',
+            data:{
+                offset:0,
+                limit:25,
+            },
+        })
+    })
+</script>
+</html>

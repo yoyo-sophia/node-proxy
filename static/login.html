@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh" class="gr__iot_china-m2m_com"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/login.css">
+    <!--本地-->
+</head>
+<body data-gr-c-s-loaded="true" style="">
+<div class="g-wrap">
+    <div class="inner-wrap">
+        <!--login-->
+        <div class="login-wrap">
+            <!--<a class="logo icon-logo-word" href="javascript:;"></a>-->
+            <a class="logo" href="javascript:;"></a>
+            <p class="title-wrap">
+                <span class="title-line"></span>
+                <em>登录</em>
+                <span class="title-line"></span>
+            </p>
+            <form class="login-form" method="post" action="javascript:;">
+                <p>
+                    <input class="j_username" type="text" check="emptyUser" placeholder="账号名/手机号码" flag="true" style="border-color: rgb(99, 163, 255);"><span class="failMessage j_failMessage"><em class="icon-tip none"></em></span>
+                    <em class="icon-user" style="color: rgb(99, 163, 255);"></em>
+                    <em class="icon-tip none" style="color: rgb(99, 163, 255);"></em>
+                </p>
+                <p>
+                    <input class="j_password login-password" check="emptyPassword" type="password"  placeholder="登录密码" flag="true" style="border-color: rgb(99, 163, 255);"><span class="failMessage j_failMessage"><em class="icon-tip none"></em></span>
+                    <em class="icon-password" style="color: rgb(99, 163, 255);"></em>
+                    <em class="icon-tip none" style="color: rgb(99, 163, 255);"></em>
+                </p>
+                <div class="isState none"><input class="j_state" name="remember" type="checkbox" value="1"><label>保持登陆</label></div>
+                <!--错误信息-->
+                <span class="errorMessage failMessage none" id="errorMessagefailMessage"></span>
+                <!--<em class="errorMessage failMessage none">&times;用户名或密码错误</em>
+                <em class="errorMessage disabledMessage none">&times;账号已经被禁用，请联系管理员</em>-->
+
+                <br>
+                <input class="btn-login btn-primary" type="submit" value="登录">
+                <p>
+                    <a class="btn-register" href="https://iot.china-m2m.com/register">注册申请</a>
+                    <a class="btn-forgotPassword" href="https://iot.china-m2m.com/register/change">忘记密码</a>
+                </p>
+            </form>
+        </div>
+        <!--版权-->
+        <p class="copyRight">版权所有 © 深圳前海翼联科技有限公司</p>
+    </div>
+    <!--遮罩-->
+    <div class="fixed-wrap none"></div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="js/checkForm.js"></script>
+<script src="js/common.js"></script>
+<script>
+    var isflag = 0;
+    var wingJoint = {
+        init: function () {
+//            表单校验
+            $(".login-form").checkForm();
+//            是否保持登录
+            $(".j_state").click(function () {
+                if ($('.j_state').is(':checked')) {
+                    isflag = 1;
+                } else {
+                    isflag = 0;
+                }
+            });
+//            登录ajax
+            $(".btn-login").click(function () {
+                for (var i = 0; i < $(".login-form input").length - 2; i++) {
+                    if ($($(".login-form input")[i]).attr("flag") == "false") {
+                        return
+                    }
+                }
+                var _data = JSON.stringify({
+                    "username": $(".login-form .j_username").val(),
+                    "password": $(".login-form .j_password").val(),
+                    "isState": isflag
+                });
+                $.ajax({
+                    type: "post",
+                    url: "/api/users/login",
+                    data: {"data": _data},
+                    datatype: "json",
+                    success: function (data) {
+                        var $data = JSON.parse(data);
+                        if ($data.status == 0) {
+                            $("#errorMessagefailMessage").text($data.msg).removeClass("none");
+                        } else if ($data.status == 2) {
+                            $("#errorMessagefailMessage").text($data.msg).removeClass("none");
+                        } else if ($data.status == 1) {
+                            window.location.href = '/';
+                            $(".login-form .failMessage").addClass("none");
+                        }
+                    },
+                    error: function () {
+                        console.log("接口调用失败");
+                    }
+                });
+            });
+//            Enter键登录
+            $(document).keyup(function (e) {
+                var e = e || window.event;
+                if (e.keyCode == 13) {
+                    $(".btn-login").trigger("click");
+                }
+            });
+            $(".login-form").submit(function () {
+                $(".j_password").trigger("blur");
+                $(".j_username").trigger("blur");
+            })
+        },
+        showMsg: function (obj, data) {
+            clearTimeout($(obj).messTimer);
+            obj.next(".failMessage").remove();
+            var _html = "<span class='failMessage'>" + data.msg + "</span>";
+            obj.after(_html);
+            obj.messTimer = setTimeout(function () {
+                obj.next(".failMessage").remove();
+            }, 5000)
+        }
+    };
+    $(function () {
+        wingJoint.init();
+    })
+</script>
+</body></html>
